@@ -4,7 +4,7 @@ This script will read in an ignore csv from Snyk reporting dashboard.  First you
 
 ## Requirements
 
-Python version 3.9.5
+Python version 3.9.5, 3.10.0
 
 ## Environment Variables
 [SNYK_TOKEN](https://docs.snyk.io/getting-started/how-to-obtain-and-authenticate-with-your-snyk-api-token)
