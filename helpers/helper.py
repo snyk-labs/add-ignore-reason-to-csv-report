@@ -33,6 +33,7 @@ def collect_reason_data(csv_data, project_url_index):
     print('Collecting reason data for ignores.')
     reason_data = []
     ignore_reporter = []
+    expire_date = []
 
     for row in csv_data[0]:
         if project_url_index != None:
@@ -52,30 +53,35 @@ def collect_reason_data(csv_data, project_url_index):
                     nested_dict = index.get('*', {})
                     reason = nested_dict['reason']
                     user = nested_dict['ignoredBy']['name']
+                    expiration_date = ""
+                    if "expires" in nested_dict:
+                        expiration_date = nested_dict['expires']
                     if reason != "":
                         reason_data.append(reason)
                         ignore_reporter.append(user)
+                        expire_date.append(expiration_date)
                         break
                     if i == len(issue_ignore_data)-1:
                         reason_data.append('No reason provided')
                         ignore_reporter.append(user)
+                        expire_date.append(expiration_date)
             else:
                 reason_data.append('Api failed to retrieve list of ignores')
                 ignore_reporter.append(user)
             
-    return reason_data, ignore_reporter
+    return reason_data, ignore_reporter, expire_date
 
-def write_reason_column_to_csv(csv_data, header, reason_data, ignore_reporter):
+def write_reason_column_to_csv(csv_data, header, reason_data, ignore_reporter, expire_date):
     print('Creating new csv file with reason data')
 
     # Adding Reason to header of csv
-    header.extend(['REASON', 'IGNORE REPORTER'])
+    header.extend(['REASON', 'IGNORE REPORTER', 'EXPIIRATION DATE'])
 
     # Add a reason column to each row
     new_reason_csv = []
     for index, row in enumerate(csv_data):
         true_index = index - 1
-        row.extend([reason_data[true_index], ignore_reporter[true_index]])
+        row.extend([reason_data[true_index], ignore_reporter[true_index], expire_date[true_index]])
         new_reason_csv.append(row)
 
     try:

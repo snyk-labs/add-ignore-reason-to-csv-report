@@ -2,3 +2,4 @@ apis/__pycache__/
 helpers/__pycache__/
 addIgnoreDataEnv/
 ignore_reason_report.csv
+exampledata.csv

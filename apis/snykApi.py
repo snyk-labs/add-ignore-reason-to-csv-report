@@ -38,6 +38,6 @@ def get_issue_ignore_data(org_name, project_id, issue_id):
         return ignoreDataApiResponse.json()
     except HTTPError as exc:
         # Raise an error for http error.
-        print("Snyk retrive ignore data endpoint failed.")
+        print("Snyk retrieve ignore data endpoint failed.")
         print(exc)
 
