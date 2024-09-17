@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -54,8 +55,14 @@ def collect_reason_data(csv_data, project_url_index):
                     reason = nested_dict['reason']
                     user = nested_dict['ignoredBy']['name']
                     expiration_date = ""
+                    # Check if expires attribute exist
                     if "expires" in nested_dict:
-                        expiration_date = nested_dict['expires']
+                        # Find first expiration date
+                        expiration_value = nested_dict['expires']
+                        if expiration_value:
+                            expiration_date = expiration_value
+                        else:
+                            expiration_date = 'No expiration date specified'
                     if reason != "":
                         reason_data.append(reason)
                         ignore_reporter.append(user)
@@ -73,15 +80,15 @@ def collect_reason_data(csv_data, project_url_index):
 
 def write_reason_column_to_csv(csv_data, header, reason_data, ignore_reporter, expire_date):
     print('Creating new csv file with reason data')
-
     # Adding Reason to header of csv
-    header.extend(['REASON', 'IGNORE REPORTER', 'EXPIIRATION DATE'])
+    header.extend(['REASON', 'IGNORE REPORTER', 'EXPIRATION DATE'])
 
     # Add a reason column to each row
     new_reason_csv = []
     for index, row in enumerate(csv_data):
         true_index = index - 1
-        row.extend([reason_data[true_index], ignore_reporter[true_index], expire_date[true_index]])
+        # Add reason data, reporter, and the first expire date
+        row.extend([reason_data[true_index], ignore_reporter[true_index], next((value for value in expire_date if value), None)])
         new_reason_csv.append(row)
 
     try:
