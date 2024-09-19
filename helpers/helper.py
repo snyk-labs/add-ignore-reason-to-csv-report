@@ -3,6 +3,7 @@ import os
 import re
 import sys
 import csv
+import time
 
 from apis.snykApi import get_issue_ignore_data
 
@@ -58,11 +59,13 @@ def collect_reason_data(csv_data, project_url_index):
                     # Check if expires attribute exist
                     if "expires" in nested_dict:
                         # Find first expiration date
-                        expiration_value = nested_dict['expires']
-                        if expiration_value:
-                            expiration_date = expiration_value
+                        # expiration_value = nested_dict['expires']
+                        if nested_dict['expires']:
+                            expiration_date = nested_dict['expires']
                         else:
                             expiration_date = 'No expiration date specified'
+                    else:
+                        expiration_date = 'No expiration date specified'
                     if reason != "":
                         reason_data.append(reason)
                         ignore_reporter.append(user)
@@ -72,9 +75,11 @@ def collect_reason_data(csv_data, project_url_index):
                         reason_data.append('No reason provided')
                         ignore_reporter.append(user)
                         expire_date.append(expiration_date)
+                        break
             else:
                 reason_data.append('Api failed to retrieve list of ignores')
                 ignore_reporter.append(user)
+                expire_date.append('No expiration date specified')
             
     return reason_data, ignore_reporter, expire_date
 
@@ -84,13 +89,15 @@ def write_reason_column_to_csv(csv_data, header, reason_data, ignore_reporter, e
     header.extend(['REASON', 'IGNORE REPORTER', 'EXPIRATION DATE'])
 
     # Add a reason column to each row
+    expire_limit = len(expire_date)
     new_reason_csv = []
     for index, row in enumerate(csv_data):
         true_index = index - 1
-        # Add reason data, reporter, and the first expire date
-        row.extend([reason_data[true_index], ignore_reporter[true_index], next((value for value in expire_date if value), None)])
+        # Add reason data, reporter, and the first expire date        
+        new_row_data = [reason_data[true_index], ignore_reporter[true_index], expire_date[true_index]]
+        row.extend(new_row_data)
         new_reason_csv.append(row)
-
+        
     try:
         with open('ignore_reason_report.csv', mode='w', newline='') as outfile:
             writer = csv.writer(outfile)
