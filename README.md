@@ -7,15 +7,21 @@ This script will read in an ignore csv from Snyk reporting dashboard.  First you
 Python version 3.9.5, 3.10.0
 
 ## Environment Variables
+**Required Environment Variables:**
+
 [SNYK_TOKEN](https://docs.snyk.io/getting-started/how-to-obtain-and-authenticate-with-your-snyk-api-token)
 
-CSV_PATH  (**Specifiy full path to csv file**)
+CSV_PATH  (**Specify full path to csv file**)
 
+**Optional Environment Variables:**
+
+[SNYK_API_URL](https://docs.snyk.io/snyk-api/rest-api/about-the-rest-api#api-url) 
 
 ## Example run
 ```bash
 export SNYK_TOKEN=TYPE-SNYK-TOKEN-HERE
 export CSV_PATH=FULL-PATH-TO-CSV
+export SNYK_API_URL="https://api.snyk.io"
 git clone https://github.com/snyk-labs/add-ignore-reason-to-csv-report.git
 pip install -r requirements.txt
 python3 index.py
