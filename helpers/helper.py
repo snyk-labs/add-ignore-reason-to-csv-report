@@ -9,7 +9,7 @@ from apis.snykApi import get_issue_ignore_data
 
 def collect_csv_data():
 
-    file_path = get_csvpath_token()
+    file_path = get_csv_path_token()
     csv_data = []
     header_data = []
 
@@ -26,8 +26,14 @@ def collect_csv_data():
             for row in reader:
                 csv_data.append(row)
 
-    except:
-        print("Failed to open csv file.  Make sure that the path is valid and the file is formatted correctly.")
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+    except PermissionError:
+        print(f"Error: Permission denied when trying to open '{file_path}'.")
+    except csv.Error as e:
+        print(f"Error: CSV file format error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
     
     return csv_data, header_data
 
@@ -108,8 +114,14 @@ def write_reason_column_to_csv(csv_data, header, reason_data, ignore_reporter, e
             # Write the updated rows
             writer.writerows(new_reason_csv)
 
-    except:
-        print('Failed to create ignore_reason_report.csv.')
+    except FileNotFoundError:
+        print(f"Error: Ignore_reason_report.csv was not found.")
+    except PermissionError:
+        print(f"Error: Permission denied when trying to open ignore_reason_report.csv.")
+    except csv.Error as e:
+        print(f"Error: CSV file format error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def find_project_url_index(header_list):
     project_url = 'ISSUE_URL'
@@ -121,7 +133,7 @@ def find_project_url_index(header_list):
     print(f"'{project_url}' is not in the list.")
         
 
-def get_csvpath_token():
+def get_csv_path_token():
     CSV_PATH = check_if_csvpath_token_exist()
     return CSV_PATH
 
@@ -129,8 +141,8 @@ def check_if_csvpath_token_exist():
     print("Checking for CSV_PATH token environment variable")
     try:
         if os.environ.get('CSV_PATH'):
-            print("Found CSV_PATH token")
+            print("Found CSV_PATH token.")
             return os.getenv('CSV_PATH')
     except:
-        print("GitLab token does not exist")
+        print("CSV_PATH token does not exist")
         sys.exit()

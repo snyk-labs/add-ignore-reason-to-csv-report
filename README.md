@@ -17,7 +17,7 @@ CSV_PATH  (**Specify full path to csv file**)
 
 [SNYK_API_URL](https://docs.snyk.io/snyk-api/rest-api/about-the-rest-api#api-url) 
 
-## Example run
+## Example run via cli
 ```bash
 export SNYK_TOKEN=TYPE-SNYK-TOKEN-HERE
 export CSV_PATH=FULL-PATH-TO-CSV
@@ -25,4 +25,11 @@ export SNYK_API_URL="https://api.snyk.io"
 git clone https://github.com/snyk-labs/add-ignore-reason-to-csv-report.git
 pip install -r requirements.txt
 python3 index.py
+```
+
+## Example run with docker
+```bash
+docker build -t ignore-data-to-csv .
+docker run -e SNYK_TOKEN=$SNYK_TOKEN -e CSV_PATH=/app/exampledata.csv -v $PWD/exampledata.csv:/app/exampledata.csv --name ignore-data-to-csv ignore-data-to-csv
+docker cp ignore-csv:/usr/src/app/ignore_reason_report.csv $PWD/ignore_reason_report.csv
 ```
