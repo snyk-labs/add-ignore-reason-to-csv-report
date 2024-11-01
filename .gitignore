@@ -4,3 +4,4 @@ addIgnoreDataEnv/
 ignore_reason_report*.csv
 exampledata.csv
 snyk_issues_detail*
+*.csv

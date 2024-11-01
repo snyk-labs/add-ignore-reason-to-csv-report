@@ -57,7 +57,7 @@ def get_issue_ignore_data(org_name, project_id, issue_id):
     url = f'{snyk_api_url}/v1/org/{org_name}/project/{project_id}/ignore/{issue_id}'
 
     try:
-        ignoreDataApiResponse = requests.get(url, headers=v1Headers)
+        ignoreDataApiResponse = requests.get(url, headers=v1Headers, verify=False)
         return ignoreDataApiResponse.json()
     except HTTPError as exc:
         # Raise an error for http error.
